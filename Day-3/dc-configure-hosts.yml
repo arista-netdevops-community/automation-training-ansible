@@ -1,0 +1,33 @@
+---
+- name: Change ATD Hosts configurations.
+  hosts: cv_server
+  connection: local
+  gather_facts: no
+  vars:
+    atd_configlets:
+      host1-day3: "{{lookup('file','configlets/host1-day3.cfg')}}"
+      host2-day3: "{{lookup('file','configlets/host2-day3.cfg')}}"
+    atd_containers:
+      Hosts:
+        parentContainerName: Tenant
+    atd_hosts:
+      - fqdn: 'host1'
+        parentContainerName: Hosts
+        configlets:
+            - host1-day3
+      - fqdn: 'host2'
+        parentContainerName: Hosts
+        configlets:
+            - host2-day3
+  tasks:
+    - name: "Build Container topology on {{inventory_hostname}}"
+      arista.cvp.cv_container_v3:
+        topology: '{{atd_containers}}'
+    - name: Push config to CVP
+      arista.cvp.cv_configlet_v3:
+        configlets: "{{atd_configlets}}"
+        state: present
+    - name: "Configure devices on {{inventory_hostname}}"
+      arista.cvp.cv_device_v3:
+        devices: '{{atd_hosts}}'
+        apply_mode: strict

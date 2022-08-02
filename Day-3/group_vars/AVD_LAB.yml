@@ -1,0 +1,51 @@
+# local users
+local_users:
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: "CHANGEME"
+
+# #cvp_ingestauth_key: "/tmp/cv-onboarding-token"
+mgmt_gateway: 192.168.0.1
+mgmt_interface_vrf: default
+
+# dns servers.
+# name_servers:
+#  - 8.8.8.8
+
+dns_domain: atd.lab
+
+# NTP Servers IP or DNS name, first NTP server will be prefered, and sourced from Managment
+ntp:
+  local_interface:
+    name: Management1
+    vrf: default
+  servers:
+  - name: 192.168.0.1
+    vrf: default
+    iburst: true
+
+management_eapi: null
+
+management_api_http:
+  enable_http: false
+  enable_https: true
+  default_services: true
+  enable_vrfs:
+    default:
+
+management_defaults:
+  secret:
+   hash: sha512
+
+# ATD config
+daemon_terminattr:
+  cvaddrs:
+      - 192.168.0.5:9910
+  cvauth:
+    method: "key"
+    key: "atd-lab"
+  cvvrf: default
+  ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
+  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
+  disable_aaa: true

@@ -1,0 +1,50 @@
+---
+- name: Build Switch configuration
+  hosts: ATD_FABRIC
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: generate intented variables
+      tags: [build]
+      import_role:
+         name: arista.avd.eos_designs
+
+    - name: generate device intended config and documention
+      tags: [build]
+      import_role:
+         name: arista.avd.eos_cli_config_gen
+
+#- name: Validate DC Fabric configuration with Batfish
+ # hosts: localhost
+ # connection: local
+ # roles:
+ #   - batfish.base
+#
+ # vars:
+ #   snapshot: ATD-target
+ #   network: ATD
+ # tasks:
+#
+ #   - name: Pre Deployment fabric validation
+ #     import_role:
+ #        name: eos_pre_fabric_validation
+
+- name: Configuration deployment with CVP
+  hosts: cv_server
+  connection: local
+  tags: [deploy]
+  gather_facts: no
+  tasks:
+    - name: run CVP provisioning
+      import_role:
+         name: arista.avd.eos_config_deploy_cvp
+      vars:
+        container_root: 'ATD_FABRIC'
+        configlets_prefix: 'atd-avd'
+        # cv_collection: v1
+        device_filter:
+        - leaf
+        - spine
+        state: present
+        execute_tasks: false

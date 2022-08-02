@@ -1,0 +1,46 @@
+all:
+  children:
+    AVD_LAB:
+      children:
+        CVP:
+          hosts:
+            cv_server:
+# DC1 Fabric
+        ATD_FABRIC:
+          children:
+            ATD_SPINES:
+              hosts:
+                spine1:
+                  ansible_host: 192.168.0.10
+                spine2:
+                  ansible_host: 192.168.0.11
+            ATD_LEAFS:
+              children:
+                ATD_LEAF1:
+                  hosts:
+                    leaf1:
+                      ansible_host: 192.168.0.12
+                    leaf2:
+                      ansible_host: 192.168.0.13
+                ATD_LEAF2:
+                  hosts:
+                    leaf3:
+                      ansible_host: 192.168.0.14
+                    leaf4:
+                      ansible_host: 192.168.0.15
+          vars:
+            ansible_connection: httpapi
+            ansible_network_os: eos
+            ansible_user: arista
+            # should use vault for passwords - leaving un-encrypted for ease of sharing for labs
+            ansible_ssh_pass: CHANGEME
+            ansible_become: yes
+            ansible_become_method: enable
+            ansible_httpapi_use_ssl: true
+            ansible_httpapi_validate_certs: false
+        ATD_TENANTS_NETWORKS:
+          children:
+            ATD_LEAFS:
+        ATD_SERVERS:
+          children:
+            ATD_LEAFS:
