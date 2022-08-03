@@ -1,0 +1,112 @@
+---
+- name: Gather data from devices for customized banners
+  hosts: eos
+  gather_facts: no
+  collections:
+    - arista.eos
+  tags:
+    - configuration
+  tasks:
+    - name: Gather facts 
+      arista.eos.eos_facts:
+    - name: Create config directory
+      delegate_to: localhost
+      ansible.builtin.file: 
+        path: "/home/coder/project/labfiles/day2/lab7/configs"
+        state: directory
+    - name: Template login banners for devices
+      template: 
+        src: "/home/coder/project/labfiles/day2/lab7/{{ template_directory }}/banner.j2"
+        dest: "/home/coder/project/labfiles/day2/lab7/configs/{{ inventory_hostname }}_banner.cfg"
+
+- name: Deploy configlets and configlet mappings to CVP 
+  hosts: cvp
+  gather_facts: no
+  connection: local
+  collections:
+    - arista.cvp
+  tags:
+    - deployment
+    - cvp
+  vars:
+    provisioning_containers:
+      CVX:
+        parentContainerName: Tenant
+      Hosts:
+        parentContainerName: Tenant 
+      Leaf: 
+        parentContainerName: Tenant 
+      Spine: 
+        parentContainerName: Tenant
+    configlets:
+      host1_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/host1_banner.cfg') }}"
+      host2_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/host2_banner.cfg') }}"
+      spine1_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/spine1_banner.cfg') }}"
+      spine2_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/spine2_banner.cfg') }}"
+      leaf1_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/leaf1_banner.cfg') }}"
+      leaf2_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/leaf2_banner.cfg') }}"
+      leaf3_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/leaf3_banner.cfg') }}"
+      leaf4_login_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/leaf4_banner.cfg') }}"
+      motd_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/motd_banner.cfg') }}"
+    managed_devices:
+      - fqdn: host1.atd.lab
+        parentContainerName: Hosts 
+        configlets:
+          - 'host1_login_banner'
+          - 'motd_banner'
+      - fqdn: host2.atd.lab
+        parentContainerName: Hosts 
+        configlets:
+          - 'host2_login_banner'
+          - 'motd_banner'
+      - fqdn: leaf1.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          - 'leaf1_login_banner'
+          - 'motd_banner' 
+      - fqdn: leaf2.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          - 'leaf2_login_banner'
+          - 'motd_banner'
+      - fqdn: leaf3.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          - 'leaf3_login_banner'
+          - 'motd_banner'
+      - fqdn: leaf4.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          - 'leaf4_login_banner'
+          - 'motd_banner'
+      - fqdn: spine1.atd.lab
+        parentContainerName: Spine 
+        configlets: 
+          - 'spine1_login_banner'
+          - 'motd_banner'
+      - fqdn: spine2.atd.lab
+        parentContainerName: Spine 
+        configlets: 
+          - 'spine2_login_banner'
+          - 'motd_banner'
+  tasks:
+    - name: Collect facts from CVP 
+      arista.cvp.cv_facts_v3:
+      register: CVP_FACTS
+    # - debug:
+    #     var: CVP_FACTS
+    - name: Build provisioning containers in CVP 
+      arista.cvp.cv_container_v3:
+        topology: "{{ provisioning_containers }}"
+        apply_mode: loose
+    - name: Load configlets into CVP 
+      arista.cvp.cv_configlet_v3:
+        configlets: "{{ configlets }}"
+        configlets_notes: "Configlet managed by Ansible, created in TAC training lab"
+    - name: Map configlets to devices
+      arista.cvp.cv_device_v3:
+        devices: "{{ managed_devices }}"
+        state: present
+        apply_mode: loose
+        search_key: fqdn 
+      register: CVP_DEVICES
