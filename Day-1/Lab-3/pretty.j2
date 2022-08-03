@@ -1,0 +1,9 @@
+Currently, CVP has the following EOS images loaded:
+{% for image in images -%}
+- {{ image }}
+{% endfor %}
+
+There are currently {{ containers | length }} provisioning containers in the system:
+{% for container in containers -%}
+- {{ container}}
+{% endfor -%} 
