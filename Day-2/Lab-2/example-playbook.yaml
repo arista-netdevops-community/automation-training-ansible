@@ -1,0 +1,26 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Gather facts 
+      arista.eos.eos_facts:
+    # uncomment this to see an example of facts gathered from your devices
+    # - debug: 
+    #     msg: "{{ ansible_net_hostname }} - model {{ ansible_net_model }} device, serial number {{ ansible_net_serialnum }}"
+    - name: Create config directory
+      delegate_to: localhost
+      ansible.builtin.file: 
+        path: "/home/coder/project/labfiles/day2/lab6/configs"
+        state: directory
+    - name: Template login banners for devices
+      template: 
+        src: "/home/coder/project/labfiles/day2/lab6/{{ template_directory }}/banner.j2"
+        dest: "/home/coder/project/labfiles/day2/lab6/configs/{{ inventory_hostname }}_banner.cfg"
+    - name: Load banners into devices
+      arista.eos.eos_banner:
+        banner: login
+        state: present
+        # add the needed information to get the banner you built in the previous task into the switch
+    - name: Set logging level to emergency for forwarding facility
+      # setup your logging level here
+    - name: Ensure eAPI is enabled
+      # configure eAPI state here
