@@ -1,0 +1,10 @@
+{{ devices | length }} devices contacted in total
+-------------------------------------------------
+{% for device in devices %}
+{{ device }} (serial number {{ devices[device]['serial'] }})
+Total of {{ devices[device]['arp_table'] | length }} entries found in ARP table
+{% for entry in devices[device]['arp_table'] -%}
+- {{ entry }}
+{% endfor -%}
+
+{% endfor %}
