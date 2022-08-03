@@ -1,0 +1,21 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Gather command outputs from devices
+      arista.eos.eos_command:
+        commands: 
+          - 'show version'
+          - 'show ip interface brief'
+      register: switch_outputs
+    - debug:
+        var: switch_outputs
+    - name: Create output directory
+      delegate_to: localhost
+      ansible.builtin.file: 
+        path: "/home/coder/project/labfiles/day2/lab5/outputs"
+        state: directory
+    - name: Write device output to file
+      delegate_to: localhost
+      ansible.builtin.copy: 
+        content: "{{ switch_outputs.stdout | replace('\\n', '\n')}}" 
+        dest: "outputs/{{ inventory_hostname }}.txt"
