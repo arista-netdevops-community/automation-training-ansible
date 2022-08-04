@@ -15,11 +15,24 @@ To install cvprc 1.2.0 type: `pip install cvprac==1.2.0`.
 ### Lab 1 - running our first AVD playbooks
 
 1. Got to your Day3 directory and update the username and RADIUS passwords in all the necessary files:
-- [inventory.yml](./inventory.yml)
-- [AVD_LAB.yml](./group_vars/AVD_LAB.yml)
-- [cv_server.yml](./host_vars/cv_server.yml)
-- [host1-day3.cfg](./configlets/host1-day3.cfg)
-- [host2-day3.cfg](./configlets/host2-day3.cfg)
+- [inventory.yml](./inventory.yml) (clear-text)
+- [AVD_LAB.yml](./group_vars/AVD_LAB.yml) (sha512 only)
+- [cv_server.yml](./host_vars/cv_server.yml) (clear-text)
+- [host1-day3.cfg](./configlets/host1-day3.cfg) (as is in the running-config)
+- [host2-day3.cfg](./configlets/host2-day3.cfg) (as is in the running-config)
+
+> NOTE: only sha512 passwords are supported on AVD which will be needed in the `AVD_LAB.yaml`. 
+> One easy way to generate the hash is to go to one of the vEOS boxes like cvx set the default to sha512
+> and configure the `arista` username again
+> e.g.: 
+
+```cvx01(config)#management defaults 
+cvx01(config-mgmt-defaults)#secret hash sha512 
+cvx01(config-mgmt-defaults)#exit
+cvx01(config)#username arista secret aristae3
+```
+
+Then you can grab the hash from the running-config.
 
 2. Execute the deploy config playbook to configure your leafs and spines
 
