@@ -26,7 +26,8 @@ To install cvprc 1.2.0 type: `pip install cvprac==1.2.0`.
 > and configure the `arista` username again
 > e.g.: 
 
-```cvx01(config)#management defaults 
+```shell
+cvx01(config)#management defaults 
 cvx01(config-mgmt-defaults)#secret hash sha512 
 cvx01(config-mgmt-defaults)#exit
 cvx01(config)#username arista secret aristae3
