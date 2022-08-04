@@ -83,12 +83,12 @@ l3leaf:
         leaf1:
           id: 11
           mgmt_ip: 192.168.0.12/24
-          uplink_switch_interfaces: ['Ethernet2', 'Ethernet3']
+          uplink_switch_interfaces: ['Ethernet2', 'Ethernet2']
           mac_address: '00:1c:73:b2:c6:01'
         leaf2:
           id: 2
           mgmt_ip: 192.168.0.13/24
-          uplink_switch_interfaces: ['Ethernet2', 'Ethernet3']
+          uplink_switch_interfaces: ['Ethernet3', 'Ethernet3']
           mac_address: '00:1c:73:b3:c6:01'
     ATD_LEAF2:
       bgp_as: 65102
@@ -99,12 +99,12 @@ l3leaf:
         leaf3:
           id: 3
           mgmt_ip: 192.168.0.14/24
-          uplink_switch_interfaces: ['Ethernet4', 'Ethernet5']
+          uplink_switch_interfaces: ['Ethernet4', 'Ethernet4']
           mac_address: '00:1c:73:b4:c6:01'
         leaf4:
           id: 4
           mgmt_ip: 192.168.0.15/24
-          uplink_switch_interfaces: ['Ethernet4', 'Ethernet5']
+          uplink_switch_interfaces: ['Ethernet5', 'Ethernet5']
           mac_address: '00:1c:73:b5:c6:01'
 
 #### Override for vEOS Lab Caveats ####
