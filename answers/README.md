@@ -48,3 +48,42 @@ aaa_server_groups:
 ```
 </p>
 </details>
+
+
+<details><summary>click here to give up and reveal the answer for Lab 4</summary>
+<p>
+
+Edit the `ATD_SERVERS.yml` and update the connected endpoints
+
+```
+servers:
+
+  server01:
+    rack: RackB
+    adapters:
+      - server_ports: [ Ethernet1, Ethernet2, Ethernet3, Ethernet4 ]
+        switch_ports: [ Ethernet4, Ethernet5, Ethernet4, Ethernet5 ]
+        switches: [ leaf1, leaf1, leaf2, leaf2 ]
+        profile: TENANT_B
+        port_channel:
+          state: present
+          description: PortChannel1
+          mode: active
+
+  server02:
+    rack: RackB
+    adapters:
+      - server_ports: [ Ethernet1, Ethernet2, Ethernet3, Ethernet4  ]
+        switch_ports: [ Ethernet4, Ethernet5, Ethernet4, Ethernet5 ]
+        switches: [ leaf3, leaf3, leaf4, leaf4 ]
+        profile: TENANT_B
+        port_channel:
+          state: present
+          description: PortChannel1
+          mode: active
+  ```
+
+
+
+</p>
+</details>
