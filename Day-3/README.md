@@ -80,3 +80,8 @@ aaa authentication login default group atds local
 aaa authorization exec default group atds local
 aaa authorization commands all default local
 ```
+
+### Lab 4
+
+You might have noticed that the MLAG port-channel only has one interface configured towards the servers on each leaf!
+Add the other interface into the port-channel as well.
