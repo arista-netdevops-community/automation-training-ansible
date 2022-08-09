@@ -17,5 +17,5 @@
     - name: Write device output to file
       delegate_to: localhost
       ansible.builtin.copy: 
-        content: "{{ switch_outputs.stdout | replace('\\n', '\n')}}" 
+        content: "{{ switch_outputs.stdout | replace('\\n', '\n') | replace(\"['\", '') | replace(\"']\", '') }}"
         dest: "outputs/{{ inventory_hostname }}.txt"
