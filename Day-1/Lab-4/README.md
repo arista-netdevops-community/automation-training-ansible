@@ -31,6 +31,6 @@ Click the "+" symbol in the top right of the Github page, and select "New reposi
 From here, give your new repository a name (doesn't matter, make it something significant to you) and set the privacy to Private.
 Click the green "Create repository" button.
 
-On the next page, look for the section header "push an existing repository".
+On the next page, Select "SSH" from the "Quick setup" section, then look for the section header "push an existing repository".
 Paste those commands into your VSCode terminal, and you should see git push your commits to Github.
 Refresh the page and confirm you now see your files in the new repository.
