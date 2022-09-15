@@ -39,4 +39,4 @@ if __name__ == '__main__':
     response = r.json()
     pp.pprint(response)
     # TODO: Print the output in the desired fortmat
-    # print(f"Example of formating a string: {response['result'][0]}")
+    # print(f"Example of formating a string in python: {response['result'][0]}")
