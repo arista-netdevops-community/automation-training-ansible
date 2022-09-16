@@ -49,8 +49,8 @@ if __name__ == '__main__':
         # TODO: Store the ARP information in a variable
         # arp_table = ...
 
-        # Here, we add an entry for each device in the dictionnary 'device_outputs'
-        # TODO: Add the ARP information to the dictionnary 'device_outputs' so that info can be used in the jinja template
+        # Here, we add an entry for each device in the dictionary 'device_outputs'
+        # TODO: Add the ARP information to the dictionary 'device_outputs' so that info can be used in the jinja template
         device_outputs[hostname] = {'serial': serialNumber}
 
     else:
