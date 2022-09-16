@@ -16,7 +16,7 @@ DEVICE_IPS = ['192.168.0.10',
               '192.168.0.17'
               ]
               
-# TODO: USE YOUR CREDENTIALS
+# USE YOUR CREDENTIALS
 USERNAME = ''
 PASSWORD = ''
 
@@ -25,9 +25,8 @@ if __name__ == '__main__':
                'method': 'runCmds',
                'params': {
                  'version': 1,
-                 'cmds': ['show version',
-                          'show hostname',
-                          'show ip arp']
+                 'cmds': ['show version', 
+                          'show hostname']
                },
                'id': '1'
               }
@@ -35,24 +34,19 @@ if __name__ == '__main__':
 
     pp = PrettyPrinter()
     env = Environment(loader=FileSystemLoader("."))
-    template = env.get_template("example.j2")
+    template = env.get_template("exercise2.j2")
 
-    # Iteration through all the devices
     for device in DEVICE_IPS:
         r = requests.post('https://{}:443/command-api'.format(device), json=payload, auth=(USERNAME, PASSWORD), verify=False)
         response = r.json()
-        # TODO: Un-comment this print command for checking the response received
-        # pp.pprint(response)
-
+        #pp.pprint(response)
         serialNumber = response['result'][0]['serialNumber']
         hostname = response['result'][1]['hostname']
-        # TODO: Store the ARP information in a variable
-        # arp_table = ...
-
-        # Here, we add an entry for each device in the dictionary 'device_outputs'
-        # TODO: Add the ARP information to the dictionary 'device_outputs' so that info can be used in the jinja template
+        eos = response['result'][0]['version']
         device_outputs[hostname] = {'serial': serialNumber}
-
+        device_outputs[hostname]['eos'] = eos
+        # TODO: Add the architecture of EOS from the 'show version' output to the 'device_outputs' dictionary so that 
+        # the info can be used in the jinja template
     else:
         pp.pprint(device_outputs)
         print(template.render(devices=device_outputs))
