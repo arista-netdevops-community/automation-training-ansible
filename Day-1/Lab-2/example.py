@@ -16,7 +16,7 @@ DEVICE_IPS = ['192.168.0.10',
               '192.168.0.17'
               ]
               
-# USE YOUR CREDENTIALS
+# TODO: USE YOUR CREDENTIALS
 USERNAME = ''
 PASSWORD = ''
 
@@ -34,16 +34,25 @@ if __name__ == '__main__':
     device_outputs = {}
 
     pp = PrettyPrinter()
-    env = Environment(loader=FileSystemLoader("/home/coder/project/labfiles/day1/lab2/"))
+    env = Environment(loader=FileSystemLoader("."))
     template = env.get_template("example.j2")
 
+    # Iteration through all the devices
     for device in DEVICE_IPS:
         r = requests.post('https://{}:443/command-api'.format(device), json=payload, auth=(USERNAME, PASSWORD), verify=False)
         response = r.json()
-        #pp.pprint(response)
+        # TODO: Un-comment this print command for checking the response received
+        # pp.pprint(response)
 
-        device_outputs[response['result'][1]['hostname']] = {'serial': response['result'][0]['serialNumber']}
-        # figure out how to store the ARP address table data in a way that will make your template rendering easy
+        serialNumber = response['result'][0]['serialNumber']
+        hostname = response['result'][1]['hostname']
+        # TODO: Store the ARP information in a variable
+        # arp_table = ...
+
+        # Here, we add an entry for each device in the dictionary 'device_outputs'
+        # TODO: Add the ARP information to the dictionary 'device_outputs' so that info can be used in the jinja template
+        device_outputs[hostname] = {'serial': serialNumber}
+
     else:
         pp.pprint(device_outputs)
         print(template.render(devices=device_outputs))
