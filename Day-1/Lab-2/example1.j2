@@ -1,0 +1,5 @@
+{{ devices | length }} devices contacted in total
+-------------------------------------------------
+{% for device in devices %}
+{{device}} with serial number {{devices[device].serial}} is running {{devices[device].eos}}
+{% endfor %}

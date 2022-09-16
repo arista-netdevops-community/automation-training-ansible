@@ -1,0 +1,26 @@
+{{ devices | length }} devices contacted in total
+-------------------------------------------------
+{% for device in devices %}
+{{device}} bgp config:
+
+{%    if 'spine' in device %}
+router bgp 65100
+{%       for key,value in devices[device].lldpNeighbors.items() %}
+{%           if 'Management' not in key %}
+{%               if 'leaf' in value['lldpNeighborInfo'][0]['systemName'] %}
+    neighbor {{value['lldpNeighborInfo'][0]['managementAddresses'][0]['address']}} remote-as 65200
+{%               endif %}
+{%           endif %}
+{%       endfor %}
+{%    endif %}
+{%    if 'leaf' in device %}router bgp 65200
+{%       for key,value in devices[device].lldpNeighbors.items() %}
+{%           if 'Management' not in key %}
+{%               if'spine' in value['lldpNeighborInfo'][0]['systemName'] %}
+    neighbor {{value['lldpNeighborInfo'][0]['managementAddresses'][0]['address']}} remote-as 65100
+{%               endif %}
+{%           endif %}
+{%       endfor %}
+{%    endif %}          
+-------------------------------------------------
+{% endfor %}

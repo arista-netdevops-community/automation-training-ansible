@@ -1,0 +1,8 @@
+{{ devices | length }} devices contacted in total
+-------------------------------------------------
+{% for device in devices %}
+{#} TODO
+add the architecture of EOS below
+{#}
+{{device}} with serial number {{devices[device].serial}} is running {{devices[device].eos}}
+{% endfor %}
