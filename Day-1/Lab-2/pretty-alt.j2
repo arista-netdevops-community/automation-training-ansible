@@ -1,0 +1,9 @@
+{{ devices | length }} devices contacted in total
+-------------------------------------------------
+{% for device in devices %}
+{{ device }} (serial Number {{ devices[device].serial }})
+Total of {{devices[device].arp_table.totalEntries}} found in ARP table
+{%    for neighbor in devices[device].arp_table.ipV4Neighbors -%}
+- {{neighbor.address}} (MAC {{neighbor.hwAddress}}) learned on {{neighbor.interface}}        
+{%     endfor -%}
+{% endfor %}
