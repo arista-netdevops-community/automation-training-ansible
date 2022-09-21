@@ -9,12 +9,12 @@
     - name: Create config directory
       delegate_to: localhost
       ansible.builtin.file: 
-        path: "/home/coder/project/labfiles/day2/lab6/configs"
+        path: "./configs"
         state: directory
     - name: Template login banners for devices
       template: 
-        src: "/home/coder/project/labfiles/day2/lab6/{{ template_directory }}/banner.j2"
-        dest: "/home/coder/project/labfiles/day2/lab6/configs/{{ inventory_hostname }}_banner.cfg"
+        src: "./{{ template_directory }}/banner.j2"
+        dest: "./configs/{{ inventory_hostname }}_banner.cfg"
     - name: Load banners into devices
       arista.eos.eos_banner:
         banner: login

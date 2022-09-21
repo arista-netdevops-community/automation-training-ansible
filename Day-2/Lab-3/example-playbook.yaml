@@ -30,7 +30,7 @@
         parentContainerName: Tenant
     configlets:
       # add additional configlet mappings as needed
-      motd_banner: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab7/configs/motd_banner.cfg') }}"
+      motd_banner: "{{ lookup('file', './configs/motd_banner.cfg') }}"
     managed_devices:
       - fqdn: host1.atd.lab
         parentContainerName: Hosts 
