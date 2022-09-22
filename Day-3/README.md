@@ -14,7 +14,7 @@ To install cvprc 1.2.0 type: `pip install cvprac==1.2.0`.
 
 ### Lab 1 - running our first AVD playbooks
 
-1. Got to your Day3 directory and update the username and RADIUS passwords in all the necessary files:
+1\. Got to your Day3 directory and update the username and RADIUS passwords in all the necessary files:
 - [inventory.yml](./inventory.yml) (clear-text)
 - [AVD_LAB.yml](./group_vars/AVD_LAB.yml) (sha512 only)
 - [cv_server.yml](./host_vars/cv_server.yml) (clear-text)
@@ -35,11 +35,20 @@ cvx01(config)#username arista secret aristae3
 
 Then you can grab the hash from the running-config.
 
-2. Execute the deploy config playbook to configure your leafs and spines
+#### Read this if the topology is using cEOS-lab (otherwise skip to the next step)
+
+If ATD is deployed using cEOS-lab devices, chances are that they have `Management0` interface instead of `Management1`
+In that case please:
+- update [AVD_LAB.yml](./group_vars/AVD_LAB.yml) and change the interface name for the `ntp.local_interface.name`
+and also add `mgmt_interface: Management0` and the end of the file.
+- update [host1-day3.cfg](./configlets/host1-day3.cfg) and replace `Management1` with `Management0` (everywhere)
+- update [host2-day3.cfg](./configlets/host2-day3.cfg) and replace `Management1` with `Management0` (everywhere)
+
+2\. Execute the deploy config playbook to configure your leafs and spines
 
 `ansible-playbook dc-fabric-deploy-cvp.yml`
 
-3. Once the playbook has finished, go to CVP and execute the change control in parallel and wait for 
+3\. Once the playbook has finished, go to CVP and execute the change control in parallel and wait for 
 it to finish.
 
 Do some sanity checks from CVP:
@@ -47,7 +56,7 @@ Do some sanity checks from CVP:
 - verify that you can see your vlan to VNI mappings
 
 
-4. Update the host configurations
+4\. Update the host configurations
 
 `ansible-playbook dc-configure-hosts.yml`
 
