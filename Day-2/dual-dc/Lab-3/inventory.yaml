@@ -1,0 +1,85 @@
+all:
+  children:
+    cvp_nodes:
+      hosts:
+        cvp: 
+          ansible_host: 192.168.0.5 
+    eos:
+      children:
+        spines:
+        leafs:
+        endhosts:
+        core:
+        border:
+    dc1:
+      children:
+        spines:
+          hosts:
+            s1-spine1:
+              ansible_host: 192.168.0.10
+            s1-spine2:
+              ansible_host: 192.168.0.11
+        leafs:
+          hosts:
+            s1-leaf1:
+              ansible_host: 192.168.0.12
+            s1-leaf2:
+              ansible_host: 192.168.0.13
+            s1-leaf3:
+              ansible_host: 192.168.0.14
+            s1-leaf4:
+              ansible_host: 192.168.0.15
+        endhosts:
+          hosts:
+            s1-host1:
+              ansible_host: 192.168.0.16
+            s1-host2:
+              ansible_host: 192.168.0.17
+        core:
+          hosts:
+            s1-core1:
+              ansible_host: 192.168.0.102
+            s1-core2:
+              ansible_host: 192.168.0.103
+        border:
+          hosts:
+            s1-brdr1:
+              ansible_host: 192.168.0.100
+            s1-brdr2:
+              ansible_host: 192.168.0.101
+    dc2:
+      children:
+        spines:
+          hosts:
+            s2-spine1:
+              ansible_host: 192.168.0.20
+            s2-spine2:
+              ansible_host: 192.168.0.21
+        leafs:
+          hosts:
+            s2-leaf1:
+              ansible_host: 192.168.0.22
+            s2-leaf2:
+              ansible_host: 192.168.0.23
+            s2-leaf3:
+              ansible_host: 192.168.0.24
+            s2-leaf4:
+              ansible_host: 192.168.0.25
+        endhosts:
+          hosts:
+            s2-host1:
+              ansible_host: 192.168.0.26
+            s2-host2:
+              ansible_host: 192.168.0.27
+        core:
+          hosts:
+            s2-core1:
+              ansible_host: 192.168.0.202
+            s2-core2:
+              ansible_host: 192.168.0.203
+        border:
+          hosts:
+            s2-brdr1:
+              ansible_host: 192.168.0.200
+            s2-brdr2:
+              ansible_host: 192.168.0.201
