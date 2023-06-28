@@ -9,17 +9,17 @@
     - name: Create config directory
       delegate_to: localhost
       ansible.builtin.file: 
-        path: "/home/coder/project/labfiles/day2/lab6/configs"
+        path: "/home/coder/project/labfiles/automation-training-ansible/Day-2/dual-dc/Lab-2/configs"
         state: directory
     - name: Template login banners for devices
       template: 
-        src: "/home/coder/project/labfiles/day2/lab6/{{ template_directory }}/banner.j2"
-        dest: "/home/coder/project/labfiles/day2/lab6/configs/{{ inventory_hostname }}_banner.cfg"
+        src: "/home/coder/project/labfiles/automation-training-ansible/Day-2/dual-dc/Lab-2/{{ template_directory }}/banner.j2"
+        dest: "/home/coder/project/labfiles/automation-training-ansible/Day-2/dual-dc/Lab-2/configs/{{ inventory_hostname }}_banner.cfg"
     - name: Load banners into devices
       arista.eos.eos_banner:
         banner: login
         state: present
-        text: "{{ lookup('file', '/home/coder/project/labfiles/day2/lab6/configs/' + inventory_hostname + '_banner.cfg') }}"
+        text: "{{ lookup('file', '/home/coder/project/labfiles/automation-training-ansible/Day-2/dual-dc/Lab-2/configs/' + inventory_hostname + '_banner.cfg') }}"
     - name: Set logging level to emergency for forwarding facility
       arista.eos.eos_logging_global:
         state: merged
