@@ -5,7 +5,7 @@ all:
         CVP:
           hosts:
             cv_server:
-# DC1 Fabric
+        # DC1 Fabric
         ATD_FABRIC:
           children:
             ATD_SPINES:
