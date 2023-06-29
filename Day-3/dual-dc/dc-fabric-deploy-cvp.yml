@@ -58,6 +58,7 @@
       vars:
         container_root: 'DC1_FABRIC'
         configlets_prefix: 'atd-avd'
+        cv_collection: v3
         # cv_collection: v1
         device_filter:
         - s1-leaf
@@ -70,6 +71,7 @@
       vars:
         container_root: 'DC2_FABRIC'
         configlets_prefix: 'atd-avd'
+        cv_collection: v3
         # cv_collection: v1
         device_filter:
         - s2-leaf
