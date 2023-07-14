@@ -5,7 +5,7 @@ all:
         CVP:
           hosts:
             cv_server:
-# DC1 Fabric
+        # DC1 Fabric
         ATD_FABRIC:
           children:
             ATD_SPINES:
@@ -33,7 +33,7 @@ all:
             ansible_network_os: eos
             ansible_user: arista
             # should use vault for passwords - leaving un-encrypted for ease of sharing for labs
-            ansible_ssh_pass: CHANGEME
+            ansible_password: "{{ lookup('env', 'LABPASSPHRASE') }}"
             ansible_become: yes
             ansible_become_method: enable
             ansible_httpapi_use_ssl: true

@@ -3,70 +3,73 @@
 ## Prerequisites
 
 Run `ansible-galaxy collection list` and check the `arista.cvp` version and make sure it's 3.4.0 or
-newer. 
+newer.
 
-To install arista.cvp 3.4.0 type: `ansible-galaxy collection install arista.cvp:=3.4.0`
+To install arista.cvp 3.6.1 type: `ansible-galaxy collection install arista.cvp:=3.6.1`
 
-Check the cvprac version with `pip freeze | grep cvprac` and see if it's 1.2.0 and newer. 
+Check the cvprac version with `pip freeze | grep cvprac` and see if it's 1.2.0 and newer.
 
-To install cvprc 1.2.0 type: `pip install cvprac==1.2.0`.
+To install cvprac 1.3.1 type: `pip install cvprac==1.3.1`.
+
 ## Getting Started
 
 ### Lab 1 - running our first AVD playbooks
 
-1\. Got to your Day3 directory and update the username and RADIUS passwords in all the necessary files:
-- [inventory.yml](./inventory.yml) (clear-text)
-- [AVD_LAB.yml](./group_vars/AVD_LAB.yml) (sha512 only)
-- [cv_server.yml](./host_vars/cv_server.yml) (clear-text)
-- [host1-day3.cfg](./configlets/host1-day3.cfg) (as is in the running-config)
-- [host2-day3.cfg](./configlets/host2-day3.cfg) (as is in the running-config)
-
-> NOTE: only sha512 passwords are supported on AVD which will be needed in the `AVD_LAB.yaml`. 
-> One easy way to generate the hash is to go to one of the vEOS boxes like cvx set the default to sha512
-> and configure the `arista` username again
-> e.g.: 
+1\. Setup Lab Password Environment Variable
+Each lab comes with a unique password. We set an environment variable called LABPASSPHRASE with the following command. The variable is later used to generate local user passwords and connect to our switches to push configs.
 
 ```shell
-cvx01(config)#management defaults 
-cvx01(config-mgmt-defaults)#secret hash sha512 
-cvx01(config-mgmt-defaults)#exit
-cvx01(config)#username arista secret aristae3
+export LABPASSPHRASE=`cat /home/coder/.config/code-server/config.yaml| grep "password:" | awk '{print $2}'`
 ```
 
-Then you can grab the hash from the running-config.
+You can view the password is set. This is the same password displayed when you click the link to access your lab.
+
+``` bash
+echo $LABPASSPHRASE
+```
+
+> `IMPORTANT`: You must run this step when you start your lab or a new shell (terminal).
+
+2\. Got to your Day3 directory and update the username and RADIUS passwords in all the necessary files:
+
+- [host1-day3.cfg](./configlets/host1-day3.cfg) (as is in the running-config)
+- [host2-day3.cfg](./configlets/host2-day3.cfg) (as is in the running-config)
 
 #### Read this if the topology is using cEOS-lab (otherwise skip to the next step)
 
 If ATD is deployed using cEOS-lab devices, chances are that they have `Management0` interface instead of `Management1`
 In that case please:
+
 - update [AVD_LAB.yml](./group_vars/AVD_LAB.yml) and change the interface name for the `ntp.local_interface.name`
 and also add `mgmt_interface: Management0` and the end of the file.
 - update [host1-day3.cfg](./configlets/host1-day3.cfg) and replace `Management1` with `Management0` (everywhere)
 - update [host2-day3.cfg](./configlets/host2-day3.cfg) and replace `Management1` with `Management0` (everywhere)
 
-2\. Execute the deploy config playbook to configure your leafs and spines
+3\. Execute the deploy config playbook to configure your leafs and spines
 
 `ansible-playbook dc-fabric-deploy-cvp.yml`
 
-3\. Once the playbook has finished, go to CVP and execute the change control in parallel and wait for 
+4\. Once the playbook has finished, go to CVP and execute the change control in parallel and wait for
 it to finish.
 
 Do some sanity checks from CVP:
+
 - verify mlag status is active
 - verify that you can see your vlan to VNI mappings
 
-
-4\. Update the host configurations
+5\. Update the host configurations
 
 `ansible-playbook dc-configure-hosts.yml`
 
 Do some sanity checks on the CLI:
+
 - check if the port-channels are up and vlan 120 is propagated
 - ping SVI IP from host1 to host 2 and vice-versa
 
 ### Lab 2
 
 Modify your AVD input data and provision a new web zone for Tenant A:
+
 - use `vlan 124`
 - call the zone: `Tenant_A_WEBZone_4`
 - use a similar SVI IP address as for the other webzones
@@ -79,7 +82,7 @@ Modify your AVD input data and add back the initial AAA config
 
 i.e. all your leafs and spines should have the following generated from AVD:
 
-```
+```eos
 radius-server host 192.168.0.1 key 7 <Key>
 !
 aaa group server radius atds
@@ -94,3 +97,9 @@ aaa authorization commands all default local
 
 You might have noticed that the MLAG port-channel only has one interface configured towards the servers on each leaf!
 Add the other interface into the port-channel as well.
+
+> HINT: Look at how the connections are in the topology diagram!
+> HINT2: After you modify input variables use `ansible-playbook dc-fabric-deploy-cvp.yml --tags build` to locally generate
+> the intended configuration files to see how things change.
+
+Once your are happy with the result run `ansible-playbook dc-fabric-deploy-cvp.yml`.
