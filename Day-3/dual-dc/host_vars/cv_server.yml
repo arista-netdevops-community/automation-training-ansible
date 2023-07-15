@@ -4,7 +4,7 @@ ansible_connection: httpapi
 ansible_httpapi_use_ssl: True
 ansible_httpapi_validate_certs: False
 ansible_user: arista
-ansible_password: CHANGEME
+ansible_password: "{{ lookup('env', 'LABPASSPHRASE') }}"
 ansible_network_os: eos
 ansible_httpapi_port: 443
 ansible_python_interpreter: $(which python3)

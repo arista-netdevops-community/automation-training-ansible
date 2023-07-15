@@ -1,0 +1,87 @@
+---
+- name: Gather data from devices for customized banners
+  hosts: eos
+  gather_facts: no
+  collections:
+    - arista.eos
+  tags:
+    - configuration
+  tasks:
+    # Add tasks here to build your banners
+
+- name: Deploy configlets and configlet mappings to CVP 
+  hosts: cvp
+  gather_facts: no
+  connection: local
+  collections:
+    - arista.cvp
+  tags:
+    - deployment
+    - cvp
+  vars:
+    provisioning_containers:
+      CVX:
+        parentContainerName: Tenant
+      Hosts:
+        parentContainerName: Tenant 
+      Leaf: 
+        parentContainerName: Tenant 
+      Spine: 
+        parentContainerName: Tenant
+    configlets:
+      # add additional configlet mappings as needed
+      motd_banner: "{{ lookup('file', './configs/motd_banner.cfg') }}"
+    managed_devices:
+      - fqdn: host1.atd.lab
+        parentContainerName: Hosts 
+        configlets:
+          # map configlets to your devices
+      - fqdn: host2.atd.lab
+        parentContainerName: Hosts 
+        configlets:
+          # map configlets to your devices'
+      - fqdn: leaf1.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          # map configlets to your devices 
+      - fqdn: leaf2.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          # map configlets to your devices
+      - fqdn: leaf3.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          # map configlets to your devices
+      - fqdn: leaf4.atd.lab
+        parentContainerName: Leaf 
+        configlets: 
+          # map configlets to your devices
+      - fqdn: spine1.atd.lab
+        parentContainerName: Spine 
+        configlets: 
+          # map configlets to your devices
+      - fqdn: spine2.atd.lab
+        parentContainerName: Spine 
+        configlets: 
+          # map configlets to your devices
+  tasks:
+    - name: Collect facts from CVP 
+      arista.cvp.cv_facts_v3:
+      register: CVP_FACTS
+    # - debug:
+    #     var: CVP_FACTS
+    - name: Build provisioning containers in CVP 
+      arista.cvp.cv_container_v3:
+        topology: "{{ provisioning_containers }}"
+        apply_mode: loose
+    - name: Load configlets into CVP 
+      arista.cvp.cv_configlet_v3:
+        configlets: "{{ configlets }}"
+        configlets_notes: "Configlet managed by Ansible, created in TAC training lab"
+    - name: Map configlets to devices
+      arista.cvp.cv_device_v3:
+        devices: "{{ managed_devices }}"
+        state: present
+        apply_mode: loose
+        search_key: fqdn 
+      register: CVP_DEVICES

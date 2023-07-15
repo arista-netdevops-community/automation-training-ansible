@@ -4,7 +4,7 @@ This should be your easiest lab of the day.
 In this lab, you're going to experience commiting the files you've written to your local git repo, and then pushing those commits to a remote git repo on Github.
 
 ## Commit your local changes
-Change directory to the day1 repo (`cd /home/coder/project/labfiles/day1`).
+Change directory to the day1 repo (`cd /home/coder/project/automation-training-ansible/Day-1`).
 
 Run `git status` and look at the list of files git reports as changed, created, or deleted.
 
