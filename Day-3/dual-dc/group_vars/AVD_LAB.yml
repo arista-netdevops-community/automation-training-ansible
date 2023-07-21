@@ -1,3 +1,5 @@
+ansible_password: "{{ lookup('env', 'LABPASSPHRASE') }}"
+
 # local users
 local_users:
   arista:
